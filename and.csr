@@ -3,3 +3,8 @@
 // Input
 %> -> %>
 
+// Process data
+<- ?(->) +1
+
+// Display output
+>> <- <%> <=
