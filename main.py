@@ -22,6 +22,9 @@ def parse_token(token: str) -> None:
     elif token.startswith('~'):
         val = int(token[1:], 16)
         tape[tape_pos] = val % 256
+    elif token.startswith('%%'):
+        val = min(int(token[2:], 16), 256)
+        tape[tape_pos] = (tape[tape_pos] % val)
     elif token == '<-':
         if tape_pos > 0:
             tape_pos -= 1
