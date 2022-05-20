@@ -73,7 +73,7 @@ def parse_token(token: str) -> None:
         macros[macro] = macro_def
     elif token.startswith('?'):
         if '(' and ')' in token:
-            tokens = token[2:token.find(')')].strip().split() # replace _ with space
+            tokens = token[2:token.find(')')].strip().split()
 
             while tape[tape_pos] != 0:
                 for tok in tokens:
@@ -81,6 +81,16 @@ def parse_token(token: str) -> None:
         else:
             while tape[tape_pos] != 0:
                 parse_token(token[1:])
+    elif token.startswith('!?'):
+        if '(' and ')' in token:
+            tokens = token[3:token.find(')')].strip().split()
+
+            while tape[tape_pos] == 0:
+                for tok in tokens:
+                    parse_token(tok)
+        else:
+            while tape[tape_pos] == 0:
+                parse_token(token[2:])
     elif re.match("\[.*?\]", token):
         iterations = int(token[1:token.find(']')], 16)
 
