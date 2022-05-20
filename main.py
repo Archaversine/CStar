@@ -6,6 +6,8 @@ tape_pos = 0
 
 jump_points = {}
 macros = {}
+
+char_buffer = []
         
 def parse_token(token: str) -> None:
     global tape
