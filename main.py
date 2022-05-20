@@ -110,6 +110,16 @@ def parse_token(token: str) -> None:
             for i in range(iterations):
                 parse_token(token[token.find(']') + 1:])
 
+    elif re.match('\{.*?\}', token):
+        entries = token[1:-1].split(',')
+        
+        for entry in entries:
+            key, value = [int(x, 16) for x in entry.split(':')]
+
+            if tape[tape_pos] == key:
+                tape[tape_pos] = value
+                break
+
     elif token.startswith('*'):
         macro = token[1:]
 
