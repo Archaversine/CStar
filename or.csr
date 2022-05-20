@@ -1,0 +1,10 @@
+# 0 0 0 a
+
+// Read Input
+%> -> %>
+
+// Process data
+<- ?([2]-> ~1 [2]<- ~0) -> ?(-> ~1 <- ~0)
+
+// Display output
+-> <%> <=
