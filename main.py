@@ -40,7 +40,14 @@ def parse_token(token: str) -> None:
             print(f"Error: right bound exceeded.")
             quit(1)
     elif token == '=>':
-        tape[tape_pos] = ord(input()[0]) % 256
+        if len(char_buffer) == 0:
+            text = input()
+            tape[tape_pos] = ord(text[0]) % 256
+
+            if len(text) > 1:
+                char_buffer.extend(text[1:])
+        else:
+            tape[tape_pos] = ord(char_buffer.pop(0)) % 256
     elif token == '<=':
         print(chr(tape[tape_pos]), end='')
     elif token == '%>':
@@ -86,6 +93,16 @@ def parse_token(token: str) -> None:
         else:
             if tape[tape_pos] != 0:
                 parse_token(token[2:])
+    elif token.startswith('C?'):
+        if '(' and ')' in token:
+            tokens = token[4:token.find(')')].strip().split()
+
+            while len(char_buffer) > 0:
+                for tok in tokens:
+                    parse_token(tok)
+        else:
+            while len(char_buffer) > 0:
+                parse_token(token[3:])
     elif token.startswith('?'):
         if '(' and ')' in token:
             tokens = token[2:token.find(')')].strip().split()
