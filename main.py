@@ -110,14 +110,34 @@ def parse_token(token: str) -> None:
                 parse_token(token[2:])
     elif token.startswith('C?'):
         if '(' and ')' in token:
-            tokens = token[4:token.find(')')].strip().split()
+            tokens = token[3:token.find(')')].strip().split()
 
             while len(char_buffer) > 0:
                 for tok in tokens:
                     parse_token(tok)
         else:
             while len(char_buffer) > 0:
+                parse_token(token[2:])
+    elif token.startswith('E??'):
+        if '(' and ')' in token:
+            tokens = token[4:token.find(')')].strip().split()
+
+            if tape_pos == len(tape) - 1:
+                for tok in tokens:
+                    parse_token(tok)
+        else:
+            if tape_pos == len(tape) - 1:
                 parse_token(token[3:])
+    elif token.startswith('E?'):
+        if '(' and ')' in token:
+            tokens = token[3:token.find(')')].strip().split()
+
+            while tape_pos == len(tape) - 1:
+                for tok in tokens:
+                    parse_token(tok)
+        else:
+            while tape_pos == len(tape) - 1:
+                parse_token(token[2:])
     elif token.startswith('?'):
         if '(' and ')' in token:
             tokens = token[2:token.find(')')].strip().split()
