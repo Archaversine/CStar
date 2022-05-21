@@ -21,14 +21,6 @@ def parse_token(token: str) -> None:
         shift *= -1 if token.startswith('-') else 1
 
         tape[tape_pos] = (tape[tape_pos] + shift) % 256
-    elif token.startswith('~^^'):
-        jump = token[3:]
-
-        if not jump in jump_points.keys():
-            print(f"Error: jump '{jump}' undefined.")
-            quit(1)
-
-        tape[tape_pos] = tape[jump_points[jump]]
     elif token.startswith('~'):
         val = int(token[1:], 0)
         tape[tape_pos] = val % 256
@@ -141,7 +133,6 @@ def parse_token(token: str) -> None:
         else:
             while tape[tape_pos] == 0:
                 parse_token(token[2:])
-
     elif re.match("\[.*?\]", token):
         iterations = int(token[1:token.find(']')], 0)
 
