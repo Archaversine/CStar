@@ -16,7 +16,7 @@ def parse_token(token: str) -> None:
     global jump_points
     global macros
 
-    if token.startswith('+') or token.startswith('-') and token != '->':
+    if token.startswith('+') or token.startswith('-') and token != '->' and token != '-->':
         shift = int(token[1:], 0)
         shift *= -1 if token.startswith('-') else 1
 
@@ -35,6 +35,13 @@ def parse_token(token: str) -> None:
     elif token.startswith('%%'):
         val = min(int(token[2:], 0), 256)
         tape[tape_pos] = (tape[tape_pos] % val)
+    elif token == '<--':
+        tape.pop()
+
+        if tape_pos >= len(tape):
+            tape_pos = len(tape) - 1
+    elif token == '-->':
+        tape.append(0)
     elif token == '<-':
         if tape_pos > 0:
             tape_pos -= 1
