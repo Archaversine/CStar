@@ -218,13 +218,16 @@ def parse_line(text: str, show_tape: bool = False):
         tape_pos = 0
         tape = [int(x, 0) for x in text[1:].strip().split()]
         return
-    elif text.startswith('"') and text.endswith('"'):
+    elif re.match('".*"', text):
         tape_pos = 0
-        tape = [ord(x) for x in text[1:text[1:].find('"')].replace('\\n', '\n')]
+        tape = [ord(x) for x in text[1:text.find('"', 1)].replace('\\n', '\n')]
         return
+    elif re.match('\&\&\(".*"\)', text):
+        name = text[4:text.find('"', 4)]
+        read_file(name)
+
     elif text.startswith('//'):
         return
-
 
     tokens = text.split()
 
@@ -290,15 +293,22 @@ def parse_line(text: str, show_tape: bool = False):
 #
 #    print(f"TAPE: {tape}")
 
+def read_file(filename: str) -> None:
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+
+        for line in lines:
+            parse_line(line)
 
 fname = sys.argv[1] if len(sys.argv) > 1 else '<stdin>'
 lines = []
 
 if fname != '<stdin>':
-    with open(fname, 'r') as f:
-        lines = f.readlines()
-    
-    for line in lines:
-        parse_line(line)
+    read_file(fname)
+    #with open(fname, 'r') as f:
+    #    lines = f.readlines()
+    #
+    #for line in lines:
+    #    parse_line(line)
 else:
     shell()

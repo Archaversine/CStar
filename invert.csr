@@ -1,4 +1,4 @@
-"Enter 8-bit binary string: "
+"Enter 8-bit binary string:\n"
 [-1]<> <=
 
 # 0 0 0 0 0 0 0 0 0xA
