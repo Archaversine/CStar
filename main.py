@@ -17,15 +17,15 @@ def parse_token(token: str) -> None:
     global macros
 
     if token.startswith('+') or token.startswith('-') and token != '->':
-        shift = int(token[1:])
+        shift = int(token[1:], 0)
         shift *= -1 if token.startswith('-') else 1
 
         tape[tape_pos] = (tape[tape_pos] + shift) % 256
     elif token.startswith('~'):
-        val = int(token[1:])
+        val = int(token[1:], 0)
         tape[tape_pos] = val % 256
     elif token.startswith('%%'):
-        val = min(int(token[2:]), 256)
+        val = min(int(token[2:], 0), 256)
         tape[tape_pos] = (tape[tape_pos] % val)
     elif token == '<-':
         if tape_pos > 0:
@@ -51,7 +51,7 @@ def parse_token(token: str) -> None:
     elif token == '<=':
         print(chr(tape[tape_pos]), end='')
     elif token == '%>':
-        tape[tape_pos] = int(input()) % 256
+        tape[tape_pos] = int(input(), 0) % 256
     elif token == '<%':
         print(tape[tape_pos], end='')
     elif token == '<>':
@@ -134,7 +134,7 @@ def parse_token(token: str) -> None:
             while tape[tape_pos] == 0:
                 parse_token(token[2:])
     elif re.match("\[.*?\]", token):
-        iterations = int(token[1:token.find(']')])
+        iterations = int(token[1:token.find(']')], 0)
 
         if iterations <= 0:
             iterations = len(tape) + iterations
@@ -158,7 +158,7 @@ def parse_token(token: str) -> None:
                 break
 
             key, value = entry.split(':')
-            key = int(key)
+            key = int(key, 0)
 
             if tape[tape_pos] == key:
                 tape_pos = min(jump_points[value], len(tape) - 1)
@@ -169,12 +169,12 @@ def parse_token(token: str) -> None:
         
         for entry in entries:
             if entry.startswith('::'):
-                value = int(entry[2:])
+                value = int(entry[2:], 0)
 
                 tape[tape_pos] = value
                 break
 
-            key, value = [int(x) for x in entry.split(':')]
+            key, value = [int(x, 0) for x in entry.split(':')]
 
             if tape[tape_pos] == key:
                 tape[tape_pos] = value
@@ -216,7 +216,11 @@ def parse_line(text: str, show_tape: bool = False):
     
     if text.startswith('#'):
         tape_pos = 0
-        tape = [int(x) for x in text[1:].strip().split()]
+        tape = [int(x, 0) for x in text[1:].strip().split()]
+        return
+    elif text.startswith('"') and text.endswith('"'):
+        tape_pos = 0
+        tape = [ord(x) for x in text[1:text[1:].find('"')].replace('\\n', '\n')]
         return
     elif text.startswith('//'):
         return
