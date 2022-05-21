@@ -1,0 +1,21 @@
+// Helper functions
+&_gates_if1([2]-> +1 [2]<-)
+&_gates_if2(-> +1 <-)
+&_gates_sum2(??*_gates_if1 -> ??*_gates_if2 ->)
+&_gates_init2([2]-> ~0 [2]<-)
+
+// Logic gate functions
+//  - Preserves original input (except for not)
+//  - After function call selected cell is output of operation
+
+// Expected Cells: [IN/OUT] (output overwrites input)
+&gates_not({0:1,::0})
+
+// Expected Cells: [IN1] [IN2] [OUT]
+// [IN1] is current selected cell
+// [OUT] will be overwritten after an operation
+&gates_and(*_gates_init2 *_gates_sum2 {2:1,::0})
+&gates_or(*_gates_init2 *_gates_sum2 ??~1)
+&gates_xor(*_gates_init2 *_gates_sum2 %%2)
+&gates_nand(*gates_and *gates_not)
+&gates_nor(*gates_or *gates_not)
