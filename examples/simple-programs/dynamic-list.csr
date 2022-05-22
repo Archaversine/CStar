@@ -1,0 +1,23 @@
+# 0 0 0
+
+@size ->
+@temp ->
+@begin @pos <<
+
+// Get size from user
+%>
+
+// Copy size into temp
+^temp ~^^size
+
+// Size the list correctly
+^size ?(--> -1)
+
+// Copy temp into size
+^size ~^^temp
+
+// Set temp to newline
+^temp ~10
+
+// Print the array
+^size -1 ?(^pos <%> @pos ^temp <= ^size -1) ^pos <% ^temp <=

@@ -246,7 +246,7 @@ def shell():
         text = input("(C* Shell) ")
         parse_line(text, show_tape=True)
 
-def parse_line(text: str, show_tape: bool = False):
+def parse_line(text: str, show_tape: bool = False, mainfile: bool = True):
     global tape
     global tape_pos
     
@@ -260,7 +260,13 @@ def parse_line(text: str, show_tape: bool = False):
         return
     elif re.match('\&\&\(".*"\)', text):
         name = text[4:text.find('"', 4)]
-        read_file(name)
+        read_file(name, mainfile=False)
+    elif text.startswith('&&& ') or text.startswith('... '):
+        if not mainfile:
+            return
+        else:
+            parse_line(text[text.find(' ') + 1:], mainfile=True)
+            return
 
     elif text.startswith('//'):
         return
@@ -293,48 +299,12 @@ def parse_line(text: str, show_tape: bool = False):
     if show_tape:
         print(f"TAPE: {tape}")
 
-#while True:
-#    text = input("(C* Shell) ")
-#
-#    if text.startswith('#'):
-#        tape_pos = 0
-#        tape = [int(x) for x in text[1:].strip().split()]
-#        continue
-#
-#
-#    tokens = text.split()
-#
-#    token_index = 0
-#
-#    while token_index < len(tokens):
-#        if tokens[token_index].count('(') > 0:
-#            current_token = ''
-#            parens = tokens[token_index].count('(')
-#
-#            #while token_index < len(tokens) and parens > 0:
-#            #    current_token += tokens[token_index] + ' '
-#            #    parens += tokens[token_index].count('(') - tokens[token_index].count(')')
-#            #    token_index += 1
-#
-#            while token_index < len(tokens) and not ')' in tokens[token_index]:
-#                current_token += tokens[token_index] + ' '
-#                token_index += 1
-#
-#            current_token += tokens[token_index]
-#            token_index += 1
-#            parse_token(current_token)
-#        else:
-#            parse_token(tokens[token_index])
-#            token_index += 1
-#
-#    print(f"TAPE: {tape}")
-
-def read_file(filename: str) -> None:
+def read_file(filename: str, mainfile=True) -> None:
     with open(filename, 'r') as f:
         lines = f.readlines()
 
         for line in lines:
-            parse_line(line)
+            parse_line(line, mainfile=mainfile)
 
 fname = sys.argv[1] if len(sys.argv) > 1 else '<stdin>'
 lines = []

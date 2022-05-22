@@ -1,0 +1,21 @@
+
+&list_init(@_list_push >> @list_sizeA ~0 E?--> -> @list_sizeB ~0 E?--> -> @list_begin @list_pos ^_list_push)
+&list_left(@_list_push ^list_pos <- @list_pos ^_list_push)
+&list_right(@_list_push ^list_pos -> @list_pos ^_list_push)
+&list_zero(@_list_push ^list_begin @list_pos ^_list_push)
+&list_append(@_list_push ^list_sizeA +1 ^list_sizeB +1 --> ^_list_push)
+&list_pop(@_list_push ^list_sizeA -1 ^list_sizeB -1 ^list_pos E?<- <-- ^_list_push)
+
+&_list_print_setup(@_list_push ^list_pos @_list_pos ^list_begin @list_pos ^list_sizeA)
+&_list_print_finish(^_list_pos @list_pos ^_list_push)
+&_list_loop(^list_pos <%> @list_pos ^list_sizeA -1)
+
+&list_print(*_list_print_setup -1 ?*_list_loop ^list_pos <% ^list_sizeA ~^^list_sizeB -> ~10 <= ~^^list_sizeA *_list_print_finish)
+
+... "Running Dynamic list test...\n"
+... [-1]<> <=
+... "Enter size of dynamic list: "
+... [-1]<> <=
+... # 0 0
+... *list_init << %> ?(*list_append -1) *list_print
+
